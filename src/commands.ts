@@ -1,4 +1,10 @@
-import {deployToGithub, execute, isFalsyVal, writeToConsole} from './helpers'
+import {
+  checkFileExistence,
+  deployToGithub,
+  execute,
+  isFalsyVal,
+  writeToConsole
+} from './helpers'
 
 export async function runLint(shouldRunLint: string): Promise<string> {
   if (!isFalsyVal(shouldRunLint)) {
@@ -65,6 +71,11 @@ export async function deployBuild(deployConfig: {
 }
 
 export async function installDeps(): Promise<string> {
+  const usesYarn = await checkFileExistence('yarn.lock')
+  if (!usesYarn) {
+    writeToConsole('Installing dependencies using yarn 🏃')
+    return await execute('yarn')
+  }
   writeToConsole('Installing dependencies 🏃')
   return await execute('npm install')
 }

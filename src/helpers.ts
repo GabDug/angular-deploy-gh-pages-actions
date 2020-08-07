@@ -1,5 +1,6 @@
 import deploy from 'github-pages-deploy-action'
 import * as cp from 'child_process'
+import fs from 'fs'
 import {info} from '@actions/core'
 
 export const execute = async (
@@ -30,4 +31,13 @@ export function navigateToDirectory(directoryPath: string): void {
 
 export function writeToConsole(message: string): void {
   info(`\n${message}\n`)
+}
+
+export async function checkFileExistence(path: string): Promise<boolean> {
+  try {
+    await fs.promises.access(path)
+  } catch (error) {
+    return false
+  }
+  return true
 }
